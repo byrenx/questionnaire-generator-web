@@ -1,11 +1,11 @@
+import { QuestionnaireInputForm } from "components/questionnaire-input/QuestionnaireInputForm";
 import "./App.css";
-import { QuestionnaireInputForm } from "./components/questionnaire-input/QuestionnaireInputForm";
 
-function App() {
+const App = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <QuestionnaireInputForm />
+	<QuestionnaireInputForm/>
       </header>
     </div>
   );
