@@ -1,20 +1,38 @@
 import { useRef } from "react";
 import * as Papa from "papaparse";
-import { Question } from "@byrenx/questionnaire-generator";
+import { generateQuestionnaireSets, Question, QuestionnaireGeneratorConfig } from "@byrenx/questionnaire-generator";
 
 export const QuestionnaireInputForm = () => {
   const fileRef: any = useRef(null);
+  const setsRef: any = useRef(0);
+  const itemPerSetRef: any = useRef(0);
+  const rememberingRef: any = useRef(0);
+  const understandingRef: any = useRef(0);
+  const applyingRef: any = useRef(0);
+  const analyzingRef: any = useRef(0);
+  const evaluatingRef: any = useRef(0);
 
-  const generateQuestionnaireSets = (questions: Question[]) => {
-    console.log(questions);
+  const generateQSets = (questions: Question[], config: QuestionnaireGeneratorConfig) => {
+    const questionnaireSets = generateQuestionnaireSets(questions, config);
+    console.log(questionnaireSets);
   }
 
   const handleGenerateQuestionnaires = () => {
-    console.log('handling click event');
     const file = fileRef?.current?.files[0];
+    const config: QuestionnaireGeneratorConfig = {
+      sets: +setsRef.current.value,
+      itemsPerSet: +itemPerSetRef.current.value,
+      distribution: {
+	'remembering': +rememberingRef.current.value,
+	'understanding': +understandingRef.current.value, 
+	'applying': +applyingRef.current.value,
+	'analyzing': +analyzingRef.current.value,
+	'evaluating': +evaluatingRef.current.value,
+      }
+    };
 
     Papa.parse(file, {
-      delimiter: ";",
+      delimiter: ",",
       header: true,
       complete: (results, file) => {
     	let questions: Question[] = [];
@@ -23,11 +41,13 @@ export const QuestionnaireInputForm = () => {
       	  questions.push(new Question({
 	      question: item['Question'].trim(),
 	      difficulty: item['Difficulty'].trim(),
-	      choices: item['Choices'].split(",").map(it => it.trim())
+	      choices: item['Choices'].split(";").map(it => it.trim())
           }));
 	}
+	console.log(questions);
+	console.log(config);
 	
-	generateQuestionnaireSets(questions);
+	generateQSets(questions, config);
       },
     });
   };
@@ -47,19 +67,19 @@ export const QuestionnaireInputForm = () => {
       </div>
       <div style={styles.formInput}>
         <label>No. of Sets</label>
-        <input type="number" />
+        <input ref={setsRef} type="number" />
       </div>
       <div style={styles.formInput}>
         <label>Items per Set</label>
-        <input type="number" />
+        <input ref={itemPerSetRef} type="number" />
       </div>
       <div style={styles.formInput}>
         <label>Distribution</label>
-        <input placeholder="Remembering" type="number" />
-        <input placeholder="Understanding" type="number" />
-        <input placeholder="Applying" type="number" />
-        <input placeholder="Analyzing" type="number" />
-        <input placeholder="Evaluating" type="number" />
+        <input placeholder="Remembering" ref={rememberingRef} type="number" />
+        <input placeholder="Understanding" ref={understandingRef} type="number" />
+        <input placeholder="Applying" ref={applyingRef} type="number" />
+        <input placeholder="Analyzing" ref={analyzingRef} type="number" />
+        <input placeholder="Evaluating" ref={evaluatingRef} type="number" />
       </div>
       <div style={styles.formInput}>
         <button onClick={handleGenerateQuestionnaires}>
