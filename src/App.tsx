@@ -1,4 +1,4 @@
-import { QuestionnaireInputForm } from "components/questionnaire-input/QuestionnaireInputForm";
+import { QuestionnaireInputForm } from "./components/questionnaire-input/QuestionnaireInputForm";
 import "./App.css";
 
 const App = () => {
