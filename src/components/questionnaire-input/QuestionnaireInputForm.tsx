@@ -16,6 +16,7 @@ export const QuestionnaireInputForm = () => {
 	const applyingRef: any = useRef(0)
 	const analyzingRef: any = useRef(0)
 	const evaluatingRef: any = useRef(0)
+	const creatingRef: any = useRef(0);
 
 	const generateQSets = (
 		questions: Question[],
@@ -31,11 +32,12 @@ export const QuestionnaireInputForm = () => {
 			sets: +setsRef.current.value,
 			itemsPerSet: +itemPerSetRef.current.value,
 			distribution: {
-				remembering: +rememberingRef.current.value,
-				understanding: +understandingRef.current.value,
-				applying: +applyingRef.current.value,
-				analyzing: +analyzingRef.current.value,
-				evaluating: +evaluatingRef.current.value,
+				Remembering: +rememberingRef.current.value,
+				Understanding: +understandingRef.current.value,
+				Applying: +applyingRef.current.value,
+				Analyzing: +analyzingRef.current.value,
+				Evaluating: +evaluatingRef.current.value,
+				Creating: +creatingRef.current.value,
 			},
 		}
 
@@ -47,11 +49,12 @@ export const QuestionnaireInputForm = () => {
 			data.forEach(datum => {
 				questions.push(new Question({
 					question: datum['Question'],
-					difficulty: datum['Difficulty'],
-					choices: datum['Choices']
+					difficulty: datum['Difficulty(Bloom\'s Taxonomy)'],
+					choices: datum['Choices (Should always be separated with semicolon ";".)'].split(';')
 				}));
 			});
 		});
+		console.log(questions);
 		generateQSets(questions, config);
 	}
 
@@ -86,6 +89,7 @@ export const QuestionnaireInputForm = () => {
 				<input placeholder="Applying" ref={applyingRef} type="number" />
 				<input placeholder="Analyzing" ref={analyzingRef} type="number" />
 				<input placeholder="Evaluating" ref={evaluatingRef} type="number" />
+				<input placeholder="Creating" ref={creatingRef} type="number" />
 			</div>
 			<div style={styles.formInput}>
 				<button onClick={handleGenerateQuestionnaires}>
