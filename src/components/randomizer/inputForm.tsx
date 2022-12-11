@@ -130,7 +130,7 @@ export const InputForm = () => {
 				</div>
 			</div>
 			<div style={styles.formInput}>
-				<button onClick={handleGenerateQuestionnaires}>
+				<button style={styles.button} onClick={handleGenerateQuestionnaires}>
 					Generate Questionnaires
 				</button>
 			</div>
@@ -170,14 +170,20 @@ const styles = {
 	},
 	distribSpan: {
 		marginBottom: "10px",
-		fontWeight: "500"
+		fontWeight: 500
 	},
 	label500: {
-		fontWeight: "500",
+		fontWeight: 500,
 	},
 	label300: {
-		fontWeight: "300",
+		fontWeight: 300,
 		fontStyle: "italic"
+	},
+	button: {
+		color: "white",
+		borderRadius: "5px",
+		backgroundColor: "#0056d2",
+		height: "25px",
+		border: 0
 	}
-
 }
