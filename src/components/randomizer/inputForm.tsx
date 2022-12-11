@@ -5,10 +5,11 @@ import {
 	generateQuestionnaireSets,
 	Question,
 	QuestionnaireGeneratorConfig,
-} from '@byrenx/questionnaire-generator'
+} from '@byrenx/questionnaire-generator';
 
-export const QuestionnaireInputForm = () => {
+export const InputForm = () => {
         const fileRef: any = useRef(null)
+	const fileName: any = useRef("");
 	const setsRef: any = useRef(0)
 	const itemPerSetRef: any = useRef(0)
 	const rememberingRef: any = useRef(0)
@@ -56,40 +57,77 @@ export const QuestionnaireInputForm = () => {
 		});
 		console.log(questions);
 		generateQSets(questions, config);
+	};
+
+	const handleChooseFileClick = () => {
+		fileRef.current.click();
+	}
+
+	const handleOnChangeFileSelect = () => {
+		fileName.current.value = fileRef.current.value
 	}
 
 	return (
 		<div style={styles.questionnaireInputFormContainer}>
 			<div style={styles.formInput}>
-				<label>Select Questionnaire File</label>
+				<label style={styles.label500}>Select Questionnaire File</label>
+				<div>
+					<input type="text"/>
+					<button onClick={handleChooseFileClick}>Choose a file</button>
+				</div>
 				<input
+					style={styles.hidden}
 					id="fileSelect"
 					ref={fileRef}
 					type="file"
 					name="questionnaires"
+					onChange={handleOnChangeFileSelect}
 					accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
 				/>
 			</div>
 			<div style={styles.formInput}>
-				<label>No. of Sets</label>
-				<input ref={setsRef} type="number" />
+				<label style={styles.label500}>No. of Sets</label>
+				<input ref={setsRef} style={styles.field} type="number" />
 			</div>
 			<div style={styles.formInput}>
-				<label>Items per Set</label>
-				<input ref={itemPerSetRef} type="number" />
+				<label style={styles.label500}>Items per Set</label>
+				<input ref={itemPerSetRef} style={styles.field} type="number" />
 			</div>
 			<div style={styles.formInput}>
-				<label>Distribution</label>
-				<input placeholder="Remembering" ref={rememberingRef} type="number" />
-				<input
-					placeholder="Understanding"
-					ref={understandingRef}
-					type="number"
-				/>
-				<input placeholder="Applying" ref={applyingRef} type="number" />
-				<input placeholder="Analyzing" ref={analyzingRef} type="number" />
-				<input placeholder="Evaluating" ref={evaluatingRef} type="number" />
-				<input placeholder="Creating" ref={creatingRef} type="number" />
+				<span style={styles.distribSpan}>Set Distribution</span>
+				<div style={styles.distributionContainer}>
+					<div style={styles.distribInputGroup}>
+						<label style={styles.label300}>Remembering</label>
+						<input ref={rememberingRef} style={styles.field} type="number" />
+					</div>
+					<div style={styles.distribInputGroup}>
+						<label style={styles.label300}>Understanding</label>
+						<input
+							style={styles.field}
+							ref={understandingRef}
+							type="number"
+						/>
+					</div>
+					<div style={styles.distribInputGroup}>
+					<label style={styles.label300}>Applying</label>
+					<input style={styles.field} ref={applyingRef} type="number" />
+					</div>
+
+					<div style={styles.distribInputGroup} >
+					<label style={styles.label300}>Analyzing</label>
+					<input style={styles.field} ref={analyzingRef} type="number" />
+					</div>
+
+					<div style={styles.distribInputGroup}>
+					<label style={styles.label300}>Evaluating</label>
+					<input style={styles.field} ref={evaluatingRef} type="number" />
+					</div>
+
+					<div style={styles.distribInputGroup}>
+					<label style={styles.label300}>Creating</label>
+					<input style={styles.field} ref={creatingRef} type="number" />
+					</div>
+				</div>
 			</div>
 			<div style={styles.formInput}>
 				<button onClick={handleGenerateQuestionnaires}>
@@ -104,6 +142,7 @@ const styles = {
 	questionnaireInputFormContainer: {
 		display: 'flex',
 		flexDirection: 'column',
+		maxWidth: "650px",
 	},
 
 	formInput: {
@@ -112,4 +151,33 @@ const styles = {
 		alignItems: 'flex-start',
 		marginBottom: 10,
 	},
+	distributionContainer: {
+		display: "flex",
+		flexDirection: "column"
+	},
+	field: {
+		height: "25px",
+    		borderRadius: "5px",
+    		borderColor: "blue",
+    		border: "1px solid"
+	},
+	hidden: {
+		display: "none"
+	},
+	distribInputGroup: {
+		display: "flex",
+		justifyContent: "space-between"
+	},
+	distribSpan: {
+		marginBottom: "10px",
+		fontWeight: "500"
+	},
+	label500: {
+		fontWeight: "500",
+	},
+	label300: {
+		fontWeight: "300",
+		fontStyle: "italic"
+	}
+
 }

@@ -1,13 +1,11 @@
 import "./App.css";
 import {Home} from "./components/home/home";
-import {QuestionnaireInputForm} from "./components/questionnaire-input/QuestionnaireInputForm";
+import {Randomizer} from "./components/randomizer/randomizer";
 
 const App = () => {
   return (
     <div className="App">
-      <header className="App-header">
-	<Home/>
-      </header>
+	<Randomizer/>
     </div>
   );
 }
