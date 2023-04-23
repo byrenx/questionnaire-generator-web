@@ -1,23 +1,19 @@
-import { useRef } from 'react';
+import { useState } from 'react';
 import * as XLSX from 'xlsx';
-
-import {
-	generateQuestionnaireSets,
-	Question,
-	QuestionnaireGeneratorConfig,
-} from '@byrenx/questionnaire-generator';
+import {Question, QuestionnaireGeneratorConfig} from '../../models';
+import {generateQuestionnaireSets} from '../../utils';
 
 export const InputForm = () => {
-        const fileRef: any = useRef(null)
-	const fileName: any = useRef("");
-	const setsRef: any = useRef(0)
-	const itemPerSetRef: any = useRef(0)
-	const rememberingRef: any = useRef(0)
-	const understandingRef: any = useRef(0)
-	const applyingRef: any = useRef(0)
-	const analyzingRef: any = useRef(0)
-	const evaluatingRef: any = useRef(0)
-	const creatingRef: any = useRef(0);
+	const [spreadsheetFile, setSpreadsheetFile] = useState(null);
+  	const [numQuestionnaireSets, setNumQuestionnaireSets] = useState(1);
+	const [questionsPerSet, setQuestionsPerSet] = useState(1);
+  	const [numQuestionsPerDifficulty, setNumQuestionsPerDifficulty] = useState({
+    	  Remembering: 0,
+    	  Understanding: 0,
+          Applying: 0,
+          Evaluating: 0,
+          Creating: 0,
+	});
 
 	const generateQSets = (
 		questions: Question[],
@@ -28,18 +24,11 @@ export const InputForm = () => {
 	}
 
 	const handleGenerateQuestionnaires = async () => {
-		const file = fileRef?.current?.files[0]
+		const file = spreadsheetFile
 		const config: QuestionnaireGeneratorConfig = {
-			sets: +setsRef.current.value,
-			itemsPerSet: +itemPerSetRef.current.value,
-			distribution: {
-				Remembering: +rememberingRef.current.value,
-				Understanding: +understandingRef.current.value,
-				Applying: +applyingRef.current.value,
-				Analyzing: +analyzingRef.current.value,
-				Evaluating: +evaluatingRef.current.value,
-				Creating: +creatingRef.current.value,
-			},
+			sets: numQuestionnaireSets,
+			itemsPerSet: questionsPerSet,
+			distribution: numQuestionsPerDifficulty,
 		}
 
 		let questions: Question[] = [];
@@ -59,83 +48,126 @@ export const InputForm = () => {
 		generateQSets(questions, config);
 	};
 
-	const handleChooseFileClick = () => {
-		fileRef.current.click();
-	}
-
-	const handleOnChangeFileSelect = () => {
-		fileName.current.value = fileRef.current.value
-	}
+	//	const handleChooseFileClick = () => {
+	//		fileRef.current.click();
+	//	}
+	//
+	//	const handleOnChangeFileSelect = () => {
+	//		fileName.current.value = fileRef.current.value
+	//	}
 
 	return (
-		<div style={styles.questionnaireInputFormContainer}>
-			<div style={styles.formInput}>
-				<label style={styles.label500}>Select Questionnaire File</label>
-				<div>
-					<input type="text"/>
-					<button onClick={handleChooseFileClick}>Choose a file</button>
-				</div>
-				<input
-					style={styles.hidden}
-					id="fileSelect"
-					ref={fileRef}
-					type="file"
-					name="questionnaires"
-					onChange={handleOnChangeFileSelect}
-					accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-				/>
-			</div>
-			<div style={styles.formInput}>
-				<label style={styles.label500}>No. of Sets</label>
-				<input ref={setsRef} style={styles.field} type="number" />
-			</div>
-			<div style={styles.formInput}>
-				<label style={styles.label500}>Items per Set</label>
-				<input ref={itemPerSetRef} style={styles.field} type="number" />
-			</div>
-			<div style={styles.formInput}>
-				<span style={styles.distribSpan}>Set Distribution</span>
-				<div style={styles.distributionContainer}>
-					<div style={styles.distribInputGroup}>
-						<label style={styles.label300}>Remembering</label>
-						<input ref={rememberingRef} style={styles.field} type="number" />
-					</div>
-					<div style={styles.distribInputGroup}>
-						<label style={styles.label300}>Understanding</label>
-						<input
-							style={styles.field}
-							ref={understandingRef}
-							type="number"
-						/>
-					</div>
-					<div style={styles.distribInputGroup}>
-					<label style={styles.label300}>Applying</label>
-					<input style={styles.field} ref={applyingRef} type="number" />
-					</div>
 
-					<div style={styles.distribInputGroup} >
-					<label style={styles.label300}>Analyzing</label>
-					<input style={styles.field} ref={analyzingRef} type="number" />
-					</div>
+      <form onSubmit={(event) => event.preventDefault()}>
+      <label htmlFor="spreadsheetFile">Spreadsheet File:</label>
+      <input
+        type="file"
+        id="spreadsheetFile"
+        onChange={(event) => setSpreadsheetFile(event.target.files[0])}
+      />
+      <br />
 
-					<div style={styles.distribInputGroup}>
-					<label style={styles.label300}>Evaluating</label>
-					<input style={styles.field} ref={evaluatingRef} type="number" />
-					</div>
+      <label htmlFor="numQuestionnaireSets">
+        Number of Questionnaire Sets:
+      </label>
+      <input
+        type="number"
+        id="numQuestionnaireSets"
+        value={numQuestionnaireSets}
+        onChange={(event) => setNumQuestionnaireSets(event.target.value)}
+      />
+      <br />
 
-					<div style={styles.distribInputGroup}>
-					<label style={styles.label300}>Creating</label>
-					<input style={styles.field} ref={creatingRef} type="number" />
-					</div>
-				</div>
-			</div>
-			<div style={styles.formInput}>
-				<button style={styles.button} onClick={handleGenerateQuestionnaires}>
-					Generate Questionnaires
-				</button>
-			</div>
-		</div>
-	)
+      <label htmlFor="questionsPerSet">
+        Number of Questions Per Set:
+      </label>
+      <input
+        type="number"
+        id="questionsPerSet"
+        value={questionsPerSet}
+        onChange={(event) => setQuestionsPerSet(event.target.value)}
+      />
+      <br />
+
+
+      <label htmlFor="numQuestionsPerDifficulty">
+        Number of Questions per Difficulty:
+      </label>
+      <br />
+      <label htmlFor="remembering">Remembering:</label>
+      <input
+        type="number"
+        id="remembering"
+        value={numQuestionsPerDifficulty.Remembering}
+        onChange={(event) =>
+          setNumQuestionsPerDifficulty({
+            ...numQuestionsPerDifficulty,
+            Remembering: event.target.value,
+          })
+        }
+      />
+      <br />
+
+      <label htmlFor="understanding">Understanding:</label>
+      <input
+        type="number"
+        id="understanding"
+        value={numQuestionsPerDifficulty.Understanding}
+        onChange={(event) =>
+          setNumQuestionsPerDifficulty({
+            ...numQuestionsPerDifficulty,
+            Understanding: event.target.value,
+          })
+        }
+      />
+      <br />
+
+      <label htmlFor="applying">Applying:</label>
+      <input
+        type="number"
+        id="applying"
+        value={numQuestionsPerDifficulty.Applying}
+        onChange={(event) =>
+          setNumQuestionsPerDifficulty({
+            ...numQuestionsPerDifficulty,
+            Applying: event.target.value,
+          })
+        }
+      />
+      <br />
+
+      <label htmlFor="evaluating">Evaluating:</label>
+      <input
+        type="number"
+        id="evaluating"
+        value={numQuestionsPerDifficulty.Evaluating}
+        onChange={(event) =>
+          setNumQuestionsPerDifficulty({
+            ...numQuestionsPerDifficulty,
+            Evaluating: event.target.value,
+          })
+        }
+      />
+      <br />
+
+      <label htmlFor="creating">Creating:</label>
+      <input
+        type="number"
+        id="creating"
+        value={numQuestionsPerDifficulty.Creating}
+        onChange={(event) =>
+          setNumQuestionsPerDifficulty({
+            ...numQuestionsPerDifficulty,
+            Creating: event.target.value,
+          })
+        }
+      />
+      <br />
+
+      <button onClick={handleGenerateQuestionnaires}>Generate Questionnaire</button>
+    </form>
+  );
+
 }
 
 const styles = {
